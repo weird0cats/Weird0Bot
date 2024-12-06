@@ -2,12 +2,20 @@
 #-=+=- Minecraft, memes, and more! -=+=-
 #+=-=+=============================+=-=+
 #imports
-import logging, nextcord, tracemalloc, config, mcstatus, os, sys #type:ignore
+import logging
+import nextcord
+import tracemalloc
+import config
+import os
+import jsonfs
+import sys
 from nextcord.ext import commands, tasks, application_checks  #type:ignore
-from nextcord import Interaction, SlashOption #type:ignore
-from nextcord.utils import get #type:ignore
-from mcstatus import JavaServer #type:ignore
+from nextcord import Interaction
+from mcstatus import JavaServer
 #config
+#find stored token
+token=jsonfs.read("token.json")["token"]
+#establish log handlers
 tracemalloc.start()
 handler=logging.FileHandler(
     filename='./nextcord.log',
@@ -36,9 +44,6 @@ except (NameError,Exception) as e:
 except OSError as e:
     logging.error(e)
     print(f"{e} server is probably inactive")
-except:
-    jserver=None
-    jstatus=None
 finally:
     logging.info(f"Successfully conected to {jserver.address.host}:{jserver.address.port}")
     print(f"Successfully connected to {jserver.address.host}:{jserver.address.port}!")
@@ -123,7 +128,7 @@ async def pingserver(interaction:Interaction):
     try:
         ping=jserver.ping()
         await interaction.send(f"Ping:{int(ping)}",ephemeral=True)
-    except:
+    except:  # noqa: E722
         await interaction.send("Failed to ping, server likely offline")
 #Restart
 @bot.slash_command(description="restarts the bot")
@@ -151,4 +156,4 @@ async def on_application_command_error(interaction:Interaction, error):
     else:
         await interaction.send(error)
 #=============== Run bot ===============
-bot.run(config.sinon_tok)
+bot.run(token)
