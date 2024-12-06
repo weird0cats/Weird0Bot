@@ -1,0 +1,11 @@
+[project]
+name = "weird0bot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "mcstatus>=11.1.1",
+    "nextcord>=2.6.0",
+    "setuptools>=75.6.0",
+]
